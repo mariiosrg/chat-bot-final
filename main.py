@@ -191,25 +191,27 @@ def extract_answer(text):
     """Hapus bagian <think>...</think> dari jawaban"""
     return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
 
-
-# === Streamlit UI ===
-st.title("🔍 Chatbot Konsultasi Hukum Pidana 🇮🇩")
-st.write("Tanyakan apa pun tentang KUHP, KUHAP, dan UU Pidana Khusus. Jawaban berdasarkan referensi hukum Indonesia.")
-
-with st.sidebar:
-    st.header("⚙️ Pengaturan LLM")
-    system_msg = st.text_area("System Message", value="Kamu adalah asisten hukum pidana yang cerdas dan dapat memahami Bahasa Indonesia. Jawablah pertanyaan hukum berdasarkan konteks dokumen hukum Indonesia yang diberikan, dengan bahasa yang jelas, sopan, dan mudah dimengerti oleh orang awam.")
-    max_tokens = st.slider("Max Tokens", 64, 2048, 512)
-    temperature = st.slider("Temperature", 0.1, 2.0, 0.7)
-    top_p = st.slider("Top-p", 0.1, 1.0, 0.95)
-
-query = st.text_input("Masukkan pertanyaan hukum pidana Anda:")
-if st.button("Tanyakan"):
-    logging.info(f"Pengguna bertanya: {query}")
-    with st.spinner("Mencari jawaban..."):
-        response = rag_chat(query, system_msg, max_tokens, temperature, top_p)
-    final_answer = extract_answer(response)
-    st.markdown("### Jawaban:")
-    st.write(final_answer)
-    logging.info(f"Jawaban diberikan: {final_answer[:80]}...")
-client.close()
+def main():
+    # === Streamlit UI ===
+    st.title("🔍 Chatbot Konsultasi Hukum Pidana 🇮🇩")
+    st.write("Tanyakan apa pun tentang KUHP, KUHAP, dan UU Pidana Khusus. Jawaban berdasarkan referensi hukum Indonesia.")
+    
+    with st.sidebar:
+        st.header("⚙️ Pengaturan LLM")
+        system_msg = st.text_area("System Message", value="Kamu adalah asisten hukum pidana yang cerdas dan dapat memahami Bahasa Indonesia. Jawablah pertanyaan hukum berdasarkan konteks dokumen hukum Indonesia yang diberikan, dengan bahasa yang jelas, sopan, dan mudah dimengerti oleh orang awam.")
+        max_tokens = st.slider("Max Tokens", 64, 2048, 512)
+        temperature = st.slider("Temperature", 0.1, 2.0, 0.7)
+        top_p = st.slider("Top-p", 0.1, 1.0, 0.95)
+    
+    query = st.text_input("Masukkan pertanyaan hukum pidana Anda:")
+    if st.button("Tanyakan"):
+        logging.info(f"Pengguna bertanya: {query}")
+        with st.spinner("Mencari jawaban..."):
+            response = rag_chat(query, system_msg, max_tokens, temperature, top_p)
+        final_answer = extract_answer(response)
+        st.markdown("### Jawaban:")
+        st.write(final_answer)
+        logging.info(f"Jawaban diberikan: {final_answer[:80]}...")
+if __name__ == "__main__":
+    main()
+    client.close()
