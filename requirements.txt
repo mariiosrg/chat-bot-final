@@ -1,0 +1,14 @@
+pymupdf 
+tqdm
+numpy
+matplotlib
+seaborn
+weaviate-client
+transformers
+torch --index-url https://download.pytorch.org/whl/cpu
+einops 
+streamlit 
+requests
+together
+sentence_transformers
+
